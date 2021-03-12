@@ -7,10 +7,12 @@ import reportWebVitals from "./reportWebVitals";
 //store imports
 import { createStore } from "redux";
 import { Provider } from "react-redux";
-import rootReducer from "./reducers/rootReducer";
+import store from "./utils/store";
 
-//store
-const store = createStore(rootReducer);
+// import {authenticator} from './reducers/signinSlice'
+
+// const work = store.dispatch(authenticator());
+// console.log(work);
 
 ReactDOM.render(
   <Provider store={store}>

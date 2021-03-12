@@ -15,7 +15,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
 import {useSelector, useDispatch} from 'react-redux';
-import {signIn} from '../actions/Actions'
+import { authenticator } from '../reducers/signinSlice';
+import store from "../utils/store";
 
 const initialFieldValues = {
   email: "",
@@ -65,14 +66,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
-
 export default function SignInSide() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { values, handleInputChange } = useForm(initialFieldValues);
-
+  const signinHelper = async() => {
+    console.log(await dispatch(authenticator(values)))
+    console.log(store.getState());
+  }
   return (
     <Grid container component='main' className={classes.root}>
       <CssBaseline />
@@ -115,7 +116,7 @@ export default function SignInSide() {
               size='medium'
               onClick={(e)=>{
                 e.preventDefault();
-                dispatch(signIn(values))
+                signinHelper()
                 }
               }
             />
