@@ -13,6 +13,7 @@ import store from "./utils/store";
 
 // const work = store.dispatch(authenticator());
 // console.log(work);
+console.log(store.getState());
 
 ReactDOM.render(
   <Provider store={store}>

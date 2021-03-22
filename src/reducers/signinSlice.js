@@ -7,63 +7,85 @@ import {
 
   export const authenticator = createAsyncThunk(
     'restaurant/signin',
-    async (values) => {
+    async (values, thunkAPI) => {
         console.log(values);
         //Instead of get restaurants we will authenticate here
         //We can have axios calls in one file like we did.
-        const response = await axios({
+        const data = await axios({
             method: 'POST',
             url: 'http://localhost:5000/restaurant/signin',
             data:{
                 email: values.email,
                 password: values.password,
-            }
+            }   
           }).then((response)=>{
-            console.log(response);
-            localStorage.setItem("authToken", response.data.accessToken)
+            // console.log(response.data);
+            // localStorage.setItem("authToken", response.data.accessToken)
+            if(response.status === 200){
+            localStorage.setItem("me", JSON.stringify(response.data))
+            }
+            else{
+                console.log("Bhaduhjad")
+                return thunkAPI.rejectWithValue("Bhaaad mai jaa");
+            }
             return(response);
 
         }).catch((err)=>{
-            console.log(err)
-          })
-
-          console.log(response);
-        
+            // console.log("Bhaduhjad")
+            return thunkAPI.rejectWithValue("Bhaaad mai jaa");
+            
+          })      
+          if(data.status === 200){
+              return (data);
+          }
+          else{
+            return thunkAPI.rejectWithValue("Bhaaad mai jaa");
+          }
     }
 )
 
 
   const signinSlice = createSlice({
-      name: 'signin',
+      name: 'auth',
       initialState: {
-          email: '',
-          password: '',
-          isAuthenticated: false,
-          //rest_Object = {}
+          isLoggedIn: false,
+          me: {},
+          checked: false,
       },
       reducers: {
-          signin: (state, action) => {
-            //Set the store variables here
-            // console.log('Function Called')
-            // console.log(payload);
-            // const email = payload.email;
-            // const password = payload.password;
-            // console.log(email, password);
+          saveme: (state, action) => {
+            //This accepts me object and saves it to state
             console.log(action.payload);
+            state.me=action.payload;
           },
+          authenticate: (state, action) =>{
+              //This sets isLoggedin to turu
+              console.log("Authenticate called")
+              state.isLoggedIn=true
+          },
+          unAuthenticate: (state, action) => {
+            //This sets isLoggedIn to Falase
+            console.log("Bulaya gaya");
+            state.isLoggedIn=false;
+          }
       },
       extraReducers:{
-          [authenticator.fulfilled]: (state, action) => {
-              console.log(action);
-              state.email = action.meta.arg.email;
-              state.password = action.meta.arg.password;
+          [authenticator.fulfilled]: (state, {payload}) => {
+            //   console.log("payload: ",payload);
+            //   console.log(state)
+              state.me = payload.data;
               state.isAuthenticated = true;
-              console.log(state);
+            //   console.log(localStorage.getItem('me'))
           },
+          [authenticator.rejected]: (state, action) => {
+            //   console.log(action);
+              console.log("Rejected cause that's what you deserve")
+          }
       }
 })
 
 
 
-export const {signin} = signinSlice.actions;
+export const {saveme, authenticate, unAuthenticate} = signinSlice.actions;
 export default signinSlice.reducer;
+// export const selectLogged = state;

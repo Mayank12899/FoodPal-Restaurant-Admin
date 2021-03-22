@@ -8,7 +8,7 @@ import {
 
 import SignInSide from "../components/SignInSide";
 import Dashboard from "../components/Dashboard";
-
+import AppRouter from "../routers/AppRouter";
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -40,7 +40,8 @@ const theme = createMuiTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <SignInSide />
+      <CssBaseline />
+        <AppRouter/>
     </ThemeProvider>
   );
 }

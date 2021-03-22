@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 //new imports
+import {useHistory} from 'react-router-dom';
 import { useForm, Form } from "./useForm";
 import Controls from "./controls/Controls";
 import {useSelector, useDispatch} from 'react-redux';
@@ -69,10 +70,13 @@ const useStyles = makeStyles((theme) => ({
 export default function SignInSide() {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
   const { values, handleInputChange } = useForm(initialFieldValues);
   const signinHelper = async() => {
     console.log(await dispatch(authenticator(values)))
+    // await dispatch(authenticator(values))
     console.log(store.getState());
+    history.go("/dashboard")
   }
   return (
     <Grid container component='main' className={classes.root}>
